@@ -1,0 +1,128 @@
+INSTALLATION GUIDE
+==================
+1. Download the .unitypackage
+2. in unity use the import package option
+3. if you experience issues try tampering with the input system and most importantly make sure that the Player bool is set as TRUE
+
+CarController.cs — Field Reference
+====================================
+
+PLAYER
+------
+Player (bool)
+  Tick this to make the car player-controlled (reads keyboard/gamepad).
+  Untick for AI — you'll drive it via SetInputs() instead.
+
+
+WHEEL COLLIDERS
+---------------
+FL (WheelCollider)  —  Front-Left wheel collider
+FR (WheelCollider)  —  Front-Right wheel collider
+RL (WheelCollider)  —  Rear-Left wheel collider (also drives the car)
+RR (WheelCollider)  —  Rear-Right wheel collider (also drives the car)
+
+
+WHEEL MESHES
+------------
+FLMesh (Transform)  —  Visible front-left wheel mesh
+FRMesh (Transform)  —  Visible front-right wheel mesh
+RLMesh (Transform)  —  Visible rear-left wheel mesh
+RRMesh (Transform)  —  Visible rear-right wheel mesh
+
+  The script copies the WheelCollider's position/rotation onto these
+  each frame so the visuals stay in sync with physics.
+
+
+ENGINE SETTINGS
+---------------
+maxMotorTorque (float, default 450)
+  Peak engine torque in Nm. Higher = faster acceleration but more wheel spin.
+
+maxBrakeTorque (float, default 3000)
+  Max braking force in Nm. Higher = shorter stopping distance.
+
+topSpeedKmh (float, default 300)
+  Hard speed cap. Throttle cuts off automatically above this value.
+
+enginePowerCurve (AnimationCurve)
+  Curve that shapes how much power the engine makes at a given RPM.
+  X axis = RPM, Y axis = 0-1 power multiplier.
+  Flat curve = torquey engine. Narrow peak = high-revving race engine.
+
+
+TRANSMISSION SETTINGS
+---------------------
+  Note: Gear 1 = Reverse, Gear 2 = Neutral, Gear 3+ = Forward gears.
+  So totalGears = 8 means 6 forward gears.
+
+totalGears (int, default 8)
+  Total gear count including Reverse and Neutral.
+
+gearRatios (float[])
+  One ratio per gear. High ratio = strong acceleration, low ratio = high top speed.
+  Array length must match totalGears.
+
+differentialRatio (float, default 3.4)
+  Final-drive multiplier applied on top of the gear ratio.
+
+shiftUpRPM (float, default 7500)
+  RPM at which the gearbox automatically shifts up.
+
+shiftDownRPM (float, default 3500)
+  RPM at which the gearbox automatically shifts down.
+
+finalDriveEfficiency (float, default 0.85)
+  Drivetrain loss factor (0-1). 0.85 = 15% of torque lost to friction.
+
+
+STEERING SETTINGS
+-----------------
+maxSteerAngle (float, default 30)
+  Maximum steering angle in degrees.
+
+highSpeedSteerReduction (float, default 0.25)
+  Fraction of maxSteerAngle still available at high speed (~180 km/h).
+  0.25 = only 25% of max angle at speed. Lower = less steering at speed.
+
+
+STABILITY SETTINGS
+------------------
+antiRollForce (float, default 6000)
+  Strength of virtual anti-roll bars in Newtons.
+  Higher = flatter cornering. 0 = disabled (full body roll).
+
+downforceCoefficient (float, default 4)
+  Scales aerodynamic downforce (increases with speed²).
+  Higher = more grip at speed.
+
+tractionControl (float, default 0.2)
+  Torque reduction (0-1) when rear wheels are spinning unevenly.
+  0 = TC off (full wheel spin possible). 1 = very aggressive cut.
+
+
+UI
+--
+speedText (TMP_Text)
+  Optional TextMeshPro element. If assigned, shows current speed in km/h.
+  Leave empty to skip.
+
+
+ENGINE AUDIO
+------------
+engineAudioSource (AudioSource)
+  AudioSource with a looping engine clip. Auto-created if left empty (with a warning).
+
+minPitch (float, default 0.5)
+  Audio pitch at idle RPM. Lower = deeper idle.
+
+maxPitch (float, default 2.5)
+  Audio pitch at redline. Higher = more screaming high-rev sound.
+
+pitchSmoothing (float, default 5)
+  How fast pitch transitions between values. Higher = snappier, lower = smoother.
+
+minVolume (float, default 0.5)
+  Volume at zero throttle (lift-off).
+
+maxVolume (float, default 1.0)
+  Volume at full throttle.
